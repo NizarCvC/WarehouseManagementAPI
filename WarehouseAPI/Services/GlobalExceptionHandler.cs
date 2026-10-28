@@ -28,7 +28,6 @@ public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService
 
         if (statusCode >= 500)
             logger.LogError(exception, "A critical server or database error occurred: {Message}", exception.Message);
-        
         else
             logger.LogWarning("A client error occurred at {Path}: {Message}", httpContext.Request.Path, exception.Message);
 
