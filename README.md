@@ -43,6 +43,9 @@ Instead of relying on heavy ORM abstractions for complex transactional workflows
 * 🧾 **Sales & Purchase Invoicing with Bulk TVPs**
   * Create multi-line **Sales Invoices** (`sp_ApproveSalesInvoice`) and **Purchase Invoices** (`sp_ApprovePurchaseInvoice`) in a single database round-trip using SQL Server **Table-Valued Parameters (`SqlDbType.Structured`)**.
   * Query paginated invoice summaries by Customer, Supplier, or across the entire organization (`vw_InvoicesSummary`).
+* 🗑️ **Seamless Soft Deletion via `INSTEAD OF` Triggers**
+  * Prevents accidental data loss and maintains historical audit trails for critical domain entities.
+  * Leverages SQL Server `INSTEAD OF DELETE` triggers to transparently intercept database `DELETE` commands and convert them into logical updates (e.g., `SET IsActive = 0`). This keeps the Data Access Layer cleanly decoupled and unaware of the underlying soft-delete mechanism.
 * 🌐 **Rich RESTful Semantics (`GET`, `POST`, `PUT`, `DELETE`, `HEAD`, `OPTIONS`)**
   * Dedicated `HEAD` endpoints for ultra-fast, payload-free existence checks (by ID, Username, Email, Phone, SKU, Barcode, Warehouse Code, and Tax Number).
   * `OPTIONS` endpoints on every resource for capability discovery.
