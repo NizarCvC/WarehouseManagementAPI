@@ -11,6 +11,9 @@ builder.Host.UseSerilog((context, loggerConfiguration) =>
 
 var app = builder.Build();
 
+var connectionString = app.Configuration.GetConnectionString("DefaultConnection");
+WarehouseDataAccess.DatabaseInitializer.Initialize(connectionString, app.Logger);
+
 app.UseHttpsRedirection();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
