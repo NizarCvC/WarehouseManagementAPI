@@ -10,7 +10,6 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-Enabled-000000?style=for-the-badge&logo=opentelemetry&logoColor=white)](https://opentelemetry.io/)
 [![Scalar](https://img.shields.io/badge/OpenAPI-Scalar_UI-6366F1?style=for-the-badge)](https://scalar.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 </div>
 
@@ -76,7 +75,7 @@ Instead of relying on heavy ORM abstractions for complex transactional workflows
 | **Authentication** | `Microsoft.AspNetCore.Authentication.JwtBearer` | `10.0.7` | JWT Bearer token validation & authentication |
 | **API Versioning** | `Asp.Versioning.Mvc` & `ApiExplorer` | `10.0.0` | Header-based API versioning & route discovery |
 | **API Docs** | `Microsoft.AspNetCore.OpenApi` & `Scalar.AspNetCore` | `10.0.7` / `2.14.11` | OpenAPI v1 specification generation & Scalar interactive UI |
-| **Caching** | `Microsoft.Extensions.Caching.StackExchangeRedis` & `MemoryCache` | `10.0.7` | In-memory & distributed caching support |
+| **Caching** | `MemoryCache` | .NET 10 | In-memory caching |
 | **Logging** | `Serilog.AspNetCore` & `Serilog.Sinks.Seq` | `10.0.0` / `9.0.0` | Structured logging to Console and Seq |
 | **Tracing** | `OpenTelemetry.Extensions.Hosting` & `Exporter.Otlp` | `1.15.3` | Distributed tracing for HTTP & ASP.NET Core requests |
 | **Containerization** | `Docker` & `Docker Compose` | Latest | Multi-container orchestration (API, SQL Server, Seq) |
@@ -191,7 +190,7 @@ Ensure you have the following tools installed on your machine:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/WarehouseManagement.git
+   git clone https://github.com/NizarCvC/WarehouseManagement.git
    cd WarehouseManagement
    ```
 
@@ -205,9 +204,9 @@ Ensure you have the following tools installed on your machine:
    #### Option A: Using `.env` (for Docker Compose)
    Create a `.env` file in the root directory next to `docker-compose.yml`:
    ```env
-   DB_SA_PASSWORD=YourStrong@Passw0rd!
+   DB_SA_PASSWORD=replace-with-a-strong-password
    SEQ_PASSWORD=YourSeqAdminPassword!
-   DB_CONNECTION=Server=warehousesqlserver,1433;Database=WarehouseDB;User Id=sa;Password=YourStrong@Passw0rd!;TrustServerCertificate=True;
+   DB_CONNECTION=Server=warehousesqlserver,1433;Database=WarehouseDB;User Id=sa;Password=replace-with-a-strong-password;TrustServerCertificate=True;
    JWT_KEY=YourSuperSecretJwtSigningKeyWithAtLeast32BytesLength!
    Certificates_Password=YourDevCertPassword
    ```
@@ -216,9 +215,11 @@ Ensure you have the following tools installed on your machine:
    Initialize and set user secrets for the `WarehouseAPI` project:
    ```bash
    cd WarehouseAPI
-   dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1434;Database=WarehouseDB;User Id=sa;Password=YourStrong@Passw0rd!;TrustServerCertificate=True;"
+   dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=WarehouseDB;User Id=sa;Password=replace-with-a-strong-password;TrustServerCertificate=True;"
    dotnet user-secrets set "Jwt:Key" "YourSuperSecretJwtSigningKeyWithAtLeast32BytesLength!"
    ```
+
+   The password in the connection string must match `DB_SA_PASSWORD` in the root `.env` file.
 
 ---
 
@@ -248,6 +249,7 @@ Because this project uses **raw ADO.NET with SQL Server Stored Procedures, Views
 Generate a local HTTPS development certificate (if running for the first time) and launch the full stack (`warehouseapi`, `warehousesqlserver`, and `warehouseapi.seq`):
 
 ```bash
+mkdir -p ${HOME}/.aspnet/https
 dotnet dev-certs https -ep ${HOME}/.aspnet/https/warehouseapi.pfx -p YourDevCertPassword
 dotnet dev-certs https --trust
 
@@ -255,7 +257,7 @@ docker compose up --build -d
 ```
 
 * **Warehouse API (HTTPS)**: `https://localhost:8081`
-* **SQL Server 2025**: `localhost,1434`
+* **SQL Server 2025**: `localhost,1433`
 * **Seq Dashboard (Logs & Traces)**: `http://localhost:5342`
 
 #### 💻 Method 2: Run Locally via .NET CLI
@@ -271,6 +273,7 @@ dotnet watch --project WarehouseAPI/WarehouseAPI.csproj
 ```
 
 * **Local API Base URL**: `https://localhost:7036`
+* **Local SQL Server**: `localhost,1433` (when using the SQL Server service from Docker Compose)
 
 ---
 
@@ -304,7 +307,7 @@ In the **Development** environment, the API automatically exposes an OpenAPI v1 
 1. Open the Scalar UI at `/scalar/v1`.
 2. Navigate to **`POST /api/token/generate`** under the **Authentication** tag and execute a login request with valid credentials.
 3. Copy the returned `accessToken`.
-4. Paste the token into the **Bearer Auth** input at the top of the Scalar interface to unlock protected endpoints.
+4. Paste the token into the **Bearer Authentication** input at the top of the Scalar interface to unlock protected endpoints.
 5. *(Optional)* Pass the `api-version: 1.0` header in requests (defaults to `1.0` when omitted).
 
 ### 🗺️ API Endpoint Summary
@@ -324,7 +327,7 @@ In the **Development** environment, the API automatically exposes an OpenAPI v1 
 
 ## 📄 License
 
-This project is licensed under the **MIT License** — see the `LICENSE` file for details.
+No license file is currently included in this repository. All rights are reserved unless a license is added.
 
 ---
 

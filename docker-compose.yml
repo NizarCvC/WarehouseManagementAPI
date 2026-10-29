@@ -4,7 +4,7 @@ services:
     platform: linux/amd64
     container_name: warehousesqlserver
     ports:
-      - "1434:1433"
+      - "1433:1433"
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=${DB_SA_PASSWORD}
@@ -44,7 +44,7 @@ services:
       - Jwt__Key=${JWT_KEY}
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${Certificates_Password}
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/warehouseapi.pfx
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://warehouseapi.seq:5342/ingest/otlp/v1/traces 
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://warehouseapi.seq/ingest/otlp/v1/traces 
       - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
     volumes:
       - ${HOME}/.aspnet/https:/https:ro
