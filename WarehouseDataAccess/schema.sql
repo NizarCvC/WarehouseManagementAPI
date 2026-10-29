@@ -1,13 +1,22 @@
 ﻿USE [master]
 GO
 /****** Object:  Database [WarehouseDB]    Script Date: 10/29/2026 06:42:54 م ******/
-CREATE DATABASE [WarehouseDB]
- CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'WarehouseDB', FILENAME = N'/var/opt/mssql/data/WarehouseDB.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
- LOG ON 
-( NAME = N'WarehouseDB_log', FILENAME = N'/var/opt/mssql/data/WarehouseDB_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
- WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'WarehouseDB')
+BEGIN
+    CREATE DATABASE [WarehouseDB]
+    CONTAINMENT = NONE
+    ON  PRIMARY 
+    ( NAME = N'WarehouseDB', FILENAME = N'/var/opt/mssql/data/WarehouseDB.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+    LOG ON 
+    ( NAME = N'WarehouseDB_log', FILENAME = N'/var/opt/mssql/data/WarehouseDB_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+    WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF;
+END
+GO
+
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [WarehouseDB].[dbo].[sp_fulltext_database] @action = 'enable'
+end
 GO
 ALTER DATABASE [WarehouseDB] SET COMPATIBILITY_LEVEL = 160
 GO
@@ -1306,8 +1315,4 @@ BEGIN
 END;
 GO
 ALTER TABLE [dbo].[Warehouses] ENABLE TRIGGER [trg_InsteadOfDeleteWarehouse]
-GO
-USE [master]
-GO
-ALTER DATABASE [WarehouseDB] SET  READ_WRITE 
 GO
